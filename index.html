@@ -35,6 +35,7 @@
         margin: 5px;
         background-color: white;
         -webkit-appearance: none;
+        touch-action: manipulation;
       }
     </style>
   </head>
@@ -44,10 +45,10 @@
     <canvas id="mahcanvas" width="700" height="700"></canvas>
     <h4>Mobile Controls</h4>
     <div id="buttons">
-      <button ontouchstart="socket.emit('keypressed', 'w')">W</button><br>
-      <button ontouchstart="socket.emit('keypressed', 'a')">A</button>
-      <button ontouchstart="socket.emit('keypressed', 's')">S</button>
-      <button ontouchstart="socket.emit('keypressed', 'd')">D</button>
+      <button onclick="socket.emit('keypressed', 'w')">W</button><br>
+      <button onclick="socket.emit('keypressed', 'a')">A</button>
+      <button onclick="socket.emit('keypressed', 's')">S</button>
+      <button onclick="socket.emit('keypressed', 'd')">D</button>
     </div>
     <h1><a href="https://phantomderp.github.io">The Louis Site</a></h1>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
