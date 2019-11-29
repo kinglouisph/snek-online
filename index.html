@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        text-align: center;
+        background-color: grey;
+      }
+      
+      h1 {
+        margin: 0;
+      }
+      
+      h3 {
+        margin: 0;
+      }
+      
+      canvas {
+        background-color: black;
+      }
+      
+      #buttons {
+        border-style: solid;
+        text-align: center;
+        background-color: black;
+        width: 1000px;
+        height: 500px;
+        margin: auto;
+      }
+      
+      #buttons > button {
+        width: 250px;
+        height: 250px;
+        margin: 5px;
+        background-color: white;
+        -webkit-appearance: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Snek Online</h1>
+    <h3 id="display">Score: 0</h3>
+    <canvas id="mahcanvas" width="700" height="700"></canvas>
+    <h4>Mobile Controls</h4>
+    <div id="buttons">
+      <button ontouchstart="socket.emit('keypressed', 'w')">W</button><br>
+      <button ontouchstart="socket.emit('keypressed', 'a')">A</button>
+      <button ontouchstart="socket.emit('keypressed', 's')">S</button>
+      <button ontouchstart="socket.emit('keypressed', 'd')">D</button>
+    </div>
+    <h1><a href="https://phantomderp.github.io">The Louis Site</a></h1>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script>
+      var canvas = document.getElementById("mahcanvas");
+      var ctx = canvas.getContext('2d')
+      var socket = io();
+      var id;
+      
+      socket.on('sendid', function(data) {
+        id = data;
+      });
+      
+      socket.on('drawdata', function(data) {
+        ctx.clearRect(0,0,700,700);
+        //coins
+        
+        ctx.fillStyle = '#00ff00';
+        ctx.beginPath();
+        for (var i in data.coins) {
+          if (data.coins[i] == null) {continue}
+          ctx.rect(data.coins[i].x + 1, data.coins[i].y + 1, 8, 8);
+        }
+        ctx.fill();
+        ctx.closePath();
+        
+        //players
+        for (var i in data.players) {
+          if (data.players[i].id === id) {ctx.fillStyle = '#ff0000'; document.getElementById('display').innerHTML = 'Score: ' + String(data.players[i].score)} else {ctx.fillStyle = '#ffffff'}
+          ctx.beginPath()
+          for (var ii in data.players[i].parts) {
+            ctx.rect(data.players[i].parts[ii].x + 1,data.players[i].parts[ii].y + 1,8,8)
+          }
+          ctx.fill();
+          ctx.closePath();
+        }
+      });
+      
+      document.addEventListener('keydown', function(event) {
+        if (event.keyCode === 87 || event.keyCode === 38) {socket.emit('keypressed', 'w')}
+        if (event.keyCode === 65 || event.keyCode === 37) {socket.emit('keypressed', 'a')}
+        if (event.keyCode === 83 || event.keyCode === 40) {socket.emit('keypressed', 's')}
+        if (event.keyCode === 68 || event.keyCode === 39) {socket.emit('keypressed', 'd')}
+      });
+    </script>
+  </body>
+</html>
